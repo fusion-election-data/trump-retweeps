@@ -17,7 +17,12 @@ ts = twitter.TwitterStream(auth=auth)
 
 
 def get_user_bio(user):
-    urls = user['entities']['description']['urls']
+    try:
+        urls = user['entities']['description']['urls']
+    except:
+        print "******* User Entities Fail"
+        print user
+        urls = []
     text = user['description']
     # TODO: Handle the case where a URL crosses the truncation point
     if len(text) > 140:
@@ -28,7 +33,8 @@ def get_user_bio(user):
 
 def get_tweet_bio(tweet):
     if 'retweeted_status' in tweet:
-        return get_user_bio(tweet['retweeted_status']['user'])
+        uid = tweet['retweeted_status']['user']['id']
+        return get_user_bio(t.users.show(user_id=uid))
     elif tweet['text'].startswith('"'):
         for um in tweet['entities']['user_mentions']:
             if um['indices'][0] == 1:

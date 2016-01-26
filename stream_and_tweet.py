@@ -37,7 +37,7 @@ def get_tweet_bio(tweet):
         return get_user_bio(t.users.show(user_id=uid))
     elif tweet['text'].startswith('"'):
         for um in tweet['entities']['user_mentions']:
-            if um['indices'][0] == 1:
+            if um['indices'][0] == 1 and um['id'] != creds['target_uid']:
                 return get_user_bio(t.users.show(user_id=um['id']))
 
 def do_tweet(tweet):
